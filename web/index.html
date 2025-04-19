@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robótica e IA con TFJS</title>
+    <!-- Importamos las librerias d TensorFlow.js, p5.js y MQTT.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.15.0/dist/tf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.3/p5.min.js"></script>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <style>
+        /* Para poner los dos canvases lado a lado */
+        #contenedor {
+            display: flex;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        canvas {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .radio-buttons {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            background: transparent;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="contenedor">
+        <div class="radio-buttons">
+            <h3>Elige el tipo de solución</h3>
+            <div>
+                <input type="radio" id="ia" name="type_result" value="ia" checked>
+                <label for="ia">IA</label>
+            </div>
+            <div>
+                <input type="radio" id="analitica" name="type_result" value="analitica">
+                <label for="analitica">Analítica</label>
+            </div>
+        </div>
+        <div id="simulacion"></div>
+        <div id="datos"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
