@@ -8,12 +8,14 @@ Servo servo;
 int pinServo_1 = 13;
 int pinServo_2 = 32;
 
+//asignamos el pin al led
+int pinLed = 2;
+
 //creamos el obj para el lcd (direccion d i2c, columnas del lcd, filas del lcd)
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 //inicializamos la posicion (grados) del servo
 int pos = 0;
-
 
 void setup() {
   //establecemos los bits x segundo para la transmisión d datos (consola)
@@ -27,6 +29,9 @@ void setup() {
   lcd.init();
   //y encendemos la luz
   lcd.backlight();
+
+  //establecemos el led como salida
+  pinMode(pinLed, OUTPUT);
 }
 
 void loop() {
@@ -57,4 +62,8 @@ void loop() {
     //Esperamos 15 milisegundos
     delay(15);
   }
+
+  //**Led
+  //prueba q funciona
+  digitalWrite(pinLed, HIGH);
 }

@@ -9,11 +9,25 @@
     {
       "type": "wokwi-lcd1602",
       "id": "lcd1",
-      "top": -41.6,
-      "left": 159.2,
+      "top": 35.2,
+      "left": 168.8,
       "attrs": { "pins": "i2c" }
     },
-    { "type": "wokwi-vcc", "id": "vcc1", "top": 183.16, "left": 153.6, "attrs": {} }
+    { "type": "wokwi-vcc", "id": "vcc1", "top": 183.16, "left": 153.6, "attrs": {} },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": -42,
+      "left": 128.6,
+      "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": 23.15,
+      "left": 76.8,
+      "attrs": { "value": "1000" }
+    }
   ],
   "connections": [
     [ "esp:TX", "$serialMonitor:RX", "", [] ],
@@ -27,7 +41,10 @@
     [ "lcd1:GND", "esp:GND.1", "#8f4814", [ "h-67.2", "v144.1" ] ],
     [ "lcd1:VCC", "vcc1:VCC", "purple", [ "v0.1", "h-38.4", "v182.4" ] ],
     [ "lcd1:SDA", "esp:D21", "orange", [ "v0.2", "h-86.4", "v38.8" ] ],
-    [ "lcd1:SCL", "esp:D22", "green", [ "h0" ] ]
+    [ "lcd1:SCL", "esp:D22", "green", [ "h0" ] ],
+    [ "led1:C", "r1:2", "#8f4814", [ "v0" ] ],
+    [ "r1:1", "esp:GND.1", "#8f4814", [ "v0" ] ],
+    [ "led1:A", "esp:D2", "red", [ "v115.2", "h-95.7" ] ]
   ],
   "dependencies": {}
 }

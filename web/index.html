@@ -34,17 +34,22 @@
 
 <body>
     <div id="contenedor">
+        <div id="info-usuario">
+            <p id="info-txt">Entrenando el modelo de IA...</p>
+            <p id="datos-txt">Haz click en el canvas para obtener los datos.</p>
+        </div>
         <div class="radio-buttons">
-            <h3>Elige el tipo de solución</h3>
+            <h3>Solución: </h3>
             <div>
-                <input type="radio" id="ia" name="type_result" value="ia" checked>
-                <label for="ia">IA</label>
-            </div>
-            <div>
-                <input type="radio" id="analitica" name="type_result" value="analitica">
+                <input type="radio" id="analitica" name="type_result" value="analitica" checked>
                 <label for="analitica">Analítica</label>
             </div>
+            <div>
+                <input type="radio" id="ia" name="type_result" value="ia" disabled>
+                <label for="ia">IA</label>
+            </div>
         </div>
+
         <div id="simulacion"></div>
         <div id="datos"></div>
     </div>

@@ -1,6 +1,8 @@
 /* ------ General ------ */
 const radioIA = document.getElementById('ia');
 const radioAnalitica = document.getElementById('analitica');
+const infoTxt = document.getElementById('info-txt');
+const datosTxt = document.getElementById('datos-txt');
 
 /* ------ MQTT ------ */
 
@@ -30,8 +32,8 @@ client.on('connect', () => {
 
     //se suscribe al topico para recibir los msj con la info
     client.subscribe(mqttTopic, (err) => {
-        if(!err) console.log(`Suscrito en el tópico: ${mqttTopic} con éxito!`);
-            else console.error(`Se ha producido un error al suscribirse en el tópico ${mqttTopic}: ${err}`);
+        if (!err) console.log(`Suscrito en el tópico: ${mqttTopic} con éxito!`);
+        else console.error(`Se ha producido un error al suscribirse en el tópico ${mqttTopic}: ${err}`);
     });
 });
 
@@ -47,20 +49,39 @@ client.on('error', (err) => {
 
 //**funciones varias
 //envia un msj con MQTT
-function sendMessage() {
+/* function sendMessage(objetivo) {
     let modoSeleccionado = radioIA.checked ? radioIA.value : radioAnalitica.value;
 
+    console.log('En sendMEssage');
+    console.log('Objetivo', objetivo);
+    console.log('Objetivo.x', objetivo.x);
+    console.log('objetivo.y', objetivo.y);
+
+
+    let solucion = null;
     //TODO: obtener solucion segun modo
 
+    if(modoSeleccionado === 'analitica') {
+        solucion = ikAnalitico(objetivo.x, objetivo.y);
+    } else {
+        if(modelo) {
+
+        }
+    }
+
+    console.log('Solucion:',solucion);
+    console.log('predecirAngulosIA', predecirAngulosIA);
 
     let message = {
-        theta1: 'theta1',
-        theta2: 'theta2',
+        theta1: solucion.theta1,
+        theta2: solucion.theta2,
         modo: modoSeleccionado
     };
 
+    console.log('Message:', message);
+
     //TODO: enviar msj al topico
-}
+} */
 
 /* ------ Inverse Kinematics ------ */
 
@@ -193,6 +214,8 @@ async function entrenarModelo() {
         },
     });
     console.log("Entrenamiento finalizado");
+    infoTxt.innerText = "Modelo de IA entrenado :)";
+    radioIA.disabled = false;
 }
 
 // --- Sketch de simulación del brazo (Canvas de la izquierda) ---
@@ -292,6 +315,46 @@ let sketchSimulacion = function (p) {
     p.mousePressed = function () {
         // Establecer objetivo en función del clic (convertido a coordenadas relativas al centro)
         objetivo = p.createVector(p.mouseX - p.width / 2, p.mouseY - p.height / 2);
+
+        console.log('OBJETIVO: ', objetivo);
+        //en base al radio button seleccionado, asignamos ese modo en la variable
+        let modoSeleccionado = radioIA.checked ? radioIA.value : radioAnalitica.value;
+        let solucion = null;
+
+        //segun el modo seleccionado, obtenemos los valores theta1 y theta2
+        if (modoSeleccionado === 'analitica') {
+            //si selecciona analitica llamamos al metodo
+            solucion = ikAnalitico(objetivo.x, objetivo.y);
+        } else {
+            //si ha seleccionado la ia, comprobamos q el modelo existe 
+            if(modelo) {
+                p.redraw(); //fuerza un frame de dibujo para actualizar angulosPredichos
+
+                //almacenamos los angulosPredichos en predecirAngulos en la solucion
+                solucion = {
+                    theta1: angulosPredichos[0],
+                    theta2: angulosPredichos[1]
+                }
+            }
+        }
+
+        console.log('Solucion:', solucion);
+
+        //creamos el obj con el mensaje
+        let message = {
+            theta1: solucion.theta1.toFixed(1),
+            theta2: solucion.theta2.toFixed(1),
+            modo: modoSeleccionado
+        };
+
+        //para mostrarlo en el front (y comprobar q los datos son correctos + están actualizados)
+        datosTxt.innerHTML = `<b>Mensaje</b>: <br> ${JSON.stringify(message)}`;
+
+        console.log('Message:', message);
+
+        //enviamos el msj al topico en adafruit
+        client.publish(mqttTopic, JSON.stringify(message));
+
     };
 };
 
