@@ -1,0 +1,152 @@
+/* Estilos generales */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #F0F0F0;
+    color: #081c15;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+/* Contenedor  */
+#contenedor {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    #contenedor {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* header */
+.header--container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #FFF;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.header--title {
+    grid-column: 1 / -1;
+    color: #2D6A4F;
+    margin-bottom: 10px;
+    font-size: 1.8rem;
+}
+
+.header--subtitle {
+    grid-column: 1 / -1;
+    color: #5f6368;
+    font-weight: 300;
+    font-size: 1.1rem;
+}
+
+/* Contenedor de información del usuario */
+#info-user--container {
+    background-color: #F0F0F0;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.info-ia--txt {
+    font-weight: 500;
+    color: #081c15;
+    margin-bottom: 8px;
+    transition: color .5s, font-weight .3s;
+}
+
+.msj-mqtt--txt {
+    color: #5f6368;
+    font-size: 0.9rem;
+    transition: color .5s, font-weight .3s;
+}
+
+/* Radio buttons */
+.radio-buttons--container {
+    background-color: #F0F0F0;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+
+    div {
+        margin: 0 40%;
+        justify-self: flex-start;
+
+        @media (max-width: 768px) {
+            margin: 0 20%;
+        }
+    }
+}
+
+.radio-buttons--title {
+    color: #1B4332;
+    margin-left: 8px;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.radio-buttons--container input[type="radio"] {
+    accent-color: #2D6A4F;
+}
+
+/* Contenedores de canvas */
+#simulacion--container,
+#datos--container {
+    padding: 20px;
+    max-width: 460px;
+    min-height: 560px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.canvas--title {
+    color: #2D6A4F;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.canvas--txt {
+    color: #5f6368;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+canvas {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+    background-color: white;
+}
+
+.status-ready {
+    font-weight: 600;
+    color: #2D6A4F;
+}
+
+.status-error {
+    font-weight: 600;
+    color: #d93025;
+}

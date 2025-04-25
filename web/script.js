@@ -1,8 +1,8 @@
 /* ------ General ------ */
 const radioIA = document.getElementById('ia');
 const radioAnalitica = document.getElementById('analitica');
-const infoTxt = document.getElementById('info-txt');
-const datosTxt = document.getElementById('datos-txt');
+const infoIATxt = document.querySelector('.info-ia--txt');
+const msjMqttTxt = document.querySelector('.msj-mqtt--txt');
 
 /* ------ MQTT ------ */
 
@@ -17,7 +17,6 @@ const mqttKey = '';
 //topico mqtt x el q se envian y reciben los msj
 const mqttTopic = `${mqttUser}/feeds/examenServo`;
 
-console.log(radioIA);
 //creamos el cliente MQTT usando websockets
 const client = mqtt.connect(`wss://${mqttHost}:${mqttPort}`, {
     username: mqttUser,
@@ -30,10 +29,20 @@ client.on('connect', () => {
     //printeamos
     console.log('Conectado a MQTT');
 
+    msjMqttTxt.innerText = 'Conectado a MQTT';
+
     //se suscribe al topico para recibir los msj con la info
     client.subscribe(mqttTopic, (err) => {
-        if (!err) console.log(`Suscrito en el tópico: ${mqttTopic} con éxito!`);
-        else console.error(`Se ha producido un error al suscribirse en el tópico ${mqttTopic}: ${err}`);
+        if (!err) {
+            console.log(`Suscrito en el tópico: ${mqttTopic} con éxito!`);
+            setTimeout( () => {
+                msjMqttTxt.innerHTML = `¡Suscrito en el tópico: <span class="status-ready">${mqttTopic}</span> con éxito!`;
+            },2500);
+        }
+        else {
+            console.error(`Se ha producido un error al suscribirse en el tópico ${mqttTopic}: ${err}`);
+            msjMqttTxt.innerHTML = `Se ha producido un error al suscribirse en el tópico <span class="status-error">${mqttTopic}</span>.`;
+        }
     });
 });
 
@@ -46,42 +55,6 @@ client.on('message', (topic, message) => {
 client.on('error', (err) => {
     console.error('Error durante MQTT: ', err);
 });
-
-//**funciones varias
-//envia un msj con MQTT
-/* function sendMessage(objetivo) {
-    let modoSeleccionado = radioIA.checked ? radioIA.value : radioAnalitica.value;
-
-    console.log('En sendMEssage');
-    console.log('Objetivo', objetivo);
-    console.log('Objetivo.x', objetivo.x);
-    console.log('objetivo.y', objetivo.y);
-
-
-    let solucion = null;
-    //TODO: obtener solucion segun modo
-
-    if(modoSeleccionado === 'analitica') {
-        solucion = ikAnalitico(objetivo.x, objetivo.y);
-    } else {
-        if(modelo) {
-
-        }
-    }
-
-    console.log('Solucion:',solucion);
-    console.log('predecirAngulosIA', predecirAngulosIA);
-
-    let message = {
-        theta1: solucion.theta1,
-        theta2: solucion.theta2,
-        modo: modoSeleccionado
-    };
-
-    console.log('Message:', message);
-
-    //TODO: enviar msj al topico
-} */
 
 /* ------ Inverse Kinematics ------ */
 
@@ -214,7 +187,8 @@ async function entrenarModelo() {
         },
     });
     console.log("Entrenamiento finalizado");
-    infoTxt.innerText = "Modelo de IA entrenado :)";
+    infoIATxt.innerText = "Modelo de IA entrenado :)";
+    infoIATxt.classList.add('status-ready')
     radioIA.disabled = false;
 }
 
@@ -225,7 +199,7 @@ let sketchSimulacion = function (p) {
 
     p.setup = function () {
         let canvas = p.createCanvas(400, 400);
-        canvas.parent("simulacion");
+        canvas.parent("simulacion--container");
         p.angleMode(p.DEGREES);
     };
 
@@ -348,7 +322,7 @@ let sketchSimulacion = function (p) {
         };
 
         //para mostrarlo en el front (y comprobar q los datos son correctos + están actualizados)
-        datosTxt.innerHTML = `<b>Mensaje</b>: <br> ${JSON.stringify(message)}`;
+        msjMqttTxt.innerHTML = `<b>Mensaje</b>: <br> ${JSON.stringify(message)}`;
 
         console.log('Message:', message);
 
@@ -362,7 +336,7 @@ let sketchSimulacion = function (p) {
 let sketchDatos = function (p) {
     p.setup = function () {
         let canvas = p.createCanvas(400, 400);
-        canvas.parent("datos");
+        canvas.parent("datos--container");
         p.angleMode(p.DEGREES);
     };
 
