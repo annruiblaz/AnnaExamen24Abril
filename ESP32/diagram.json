@@ -30,8 +30,8 @@
     }
   ],
   "connections": [
-    [ "esp:TX", "$serialMonitor:RX", "", [] ],
-    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "esp:TX0", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX0", "$serialMonitor:TX", "", [] ],
     [ "servo2:V+", "esp:VIN", "red", [ "h-76.8", "v393.7" ] ],
     [ "servo2:GND", "esp:GND.2", "#8f4814", [ "h-86.4", "v393.7" ] ],
     [ "servo1:GND", "esp:GND.2", "#8f4814", [ "h-38.4", "v249.7" ] ],
