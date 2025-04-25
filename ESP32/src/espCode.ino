@@ -54,6 +54,15 @@ void connectMQTT()
       mqttClient.subscribe(mqttTopic); // se suscribe al feed
       Serial.print("Suscrito a:");
       Serial.println(mqttTopic);
+
+      //printeamos en el LCD q tenemos conexión mqtt
+      //el delay es para q no se solape con el print d conexion wifi (xq en VSCode compila bien)
+      delay(1500);
+      lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("MQTT Conectado!");
+      lcd.setCursor(0,1);
+      lcd.print("Esperando msj...");
     }
     else
     {
@@ -64,6 +73,8 @@ void connectMQTT()
       delay(5000);
     }
   }
+  //para mejorar como s ven los msj x consola
+  Serial.println("---------------------------");
 }
 
 // callback cuando llega un msj MQTT
@@ -81,7 +92,7 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
   }
 
   //printeamos el contenido del msj
-  Serial.print("Contenido: ");
+  Serial.println("Contenido: ");
   Serial.println(message);
 
   //definimos la capacidad del documento JSON
@@ -121,6 +132,7 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
 
   //printeamos los angulos x consola
   Serial.println("Angulos recibidos: " + String(theta1) + ", " + String(theta2));
+  Serial.println("---------------------------");
 }
 
 void setup(){
