@@ -1,4 +1,5 @@
 /* ------ General ------ */
+//obtenemos las ref a los elementos html
 const radioIA = document.getElementById('ia');
 const radioAnalitica = document.getElementById('analitica');
 const infoIATxt = document.querySelector('.info-ia--txt');
@@ -290,21 +291,25 @@ let sketchSimulacion = function (p) {
         // Establecer objetivo en función del clic (convertido a coordenadas relativas al centro)
         objetivo = p.createVector(p.mouseX - p.width / 2, p.mouseY - p.height / 2);
 
-        console.log('OBJETIVO: ', objetivo);
+        //**Obtiene datos y manda msj MQTT
+        //console.log('OBJETIVO: ', objetivo); //printea objetivo para comprobar
         //en base al radio button seleccionado, asignamos ese modo en la variable
-        let modoSeleccionado = radioIA.checked ? radioIA.value : radioAnalitica.value;
-        let solucion = null;
 
-        //segun el modo seleccionado, obtenemos los valores theta1 y theta2
+        //ternario con el q obtenemos q modo ha seleccionado el user (analitica o ia)
+        //comprobando el radio btn seleccionado
+        let modoSeleccionado = radioIA.checked ? radioIA.value : radioAnalitica.value;
+        let solucion = null;//declaracion para poder acceder dsps
+
+        //segun el modo seleccionado, obtenemos los valores theta1 y theta2 d dnd toca
         if (modoSeleccionado === 'analitica') {
-            //si selecciona analitica llamamos al metodo
+            //si selecciona analitica llamamos al metodo q lo calcula (thankuu angel!!)
             solucion = ikAnalitico(objetivo.x, objetivo.y);
         } else {
             //si ha seleccionado la ia, comprobamos q el modelo existe 
             if(modelo) {
-                p.redraw(); //fuerza un frame de dibujo para actualizar angulosPredichos
+                p.redraw(); //forzamos un frame de dibujo para actualizar los datos angulosPredichos
 
-                //almacenamos los angulosPredichos en predecirAngulos en la solucion
+                //almacenamos los angulosPredichos en la funcion d predecirAngulos en el obj solucion
                 solucion = {
                     theta1: angulosPredichos[0],
                     theta2: angulosPredichos[1]
@@ -312,9 +317,9 @@ let sketchSimulacion = function (p) {
             }
         }
 
-        console.log('Solucion:', solucion);
+        //console.log('Solucion:', solucion);//printea solucion para comprobar q va ok
 
-        //creamos el obj con el mensaje
+        //creamos el obj con el mensaje una vez q ya tenemos los datos en solucion
         let message = {
             theta1: solucion.theta1.toFixed(1),
             theta2: solucion.theta2.toFixed(1),
@@ -323,12 +328,10 @@ let sketchSimulacion = function (p) {
 
         //para mostrarlo en el front (y comprobar q los datos son correctos + están actualizados)
         msjMqttTxt.innerHTML = `<b>Mensaje</b>: <br> ${JSON.stringify(message)}`;
+        //console.log('Message:', message);
 
-        console.log('Message:', message);
-
-        //enviamos el msj al topico en adafruit
+        //enviamos el msj x mqtt al topico en adafruit
         client.publish(mqttTopic, JSON.stringify(message));
-
     };
 };
 

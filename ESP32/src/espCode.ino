@@ -69,6 +69,7 @@ void connectMQTT()
 // callback cuando llega un msj MQTT
 void mqttCallback(char *topic, byte *payload, unsigned int length)
 {
+  //printeamos q hemos recibido un msj x consola
   Serial.print("Mensaje recibido en: ");
   Serial.println(topic);
 
@@ -79,6 +80,7 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
     message += (char)payload[i]; // contruimos el msj caracter a caracter
   }
 
+  //printeamos el contenido del msj
   Serial.print("Contenido: ");
   Serial.println(message);
 
@@ -94,35 +96,34 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
     return;
   }
 
-  //Extraemos los valores del json a variables
+  //Extraemos cada uno d los valores del json a variables
   float theta1 = doc["theta1"];
   float theta2 = doc["theta2"];
   String modo = doc["modo"];
 
+  //movemos los servos a los grados recibidos x mqtt y hemos obtenido
   servo_1.write(theta1);
   servo_2.write(theta2);
 
+  //limpia el lcd y escribe los datos
   lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Theta1: " + String(theta1));
-  lcd.setCursor(0, 1);
+  lcd.setCursor(0, 0);//posicionamos el cursor al inicio del lcd (1 fila)
+  lcd.print("Theta1: " + String(theta1)); //escribimos a q theta pertenece y el valor
+  lcd.setCursor(0, 1); //igual q en theta1
   lcd.print("Theta2: " + String(theta2));
 
-  // enciende o apaga el led segun el msj recibido
-  if (modo == "analitica")
-  {
+  // enciende o apaga el led si el modo seleccionado x el user es analitica
+  if (modo == "analitica") {
     digitalWrite(pinLed, HIGH);
-  }
-  else
-  {
+  } else {
     digitalWrite(pinLed, LOW);
   }
 
+  //printeamos los angulos x consola
   Serial.println("Angulos recibidos: " + String(theta1) + ", " + String(theta2));
 }
 
-void setup()
-{
+void setup(){
   // establecemos los bits x segundo para la transmisión d datos (consola)
   Serial.begin(115200);
 
@@ -167,11 +168,13 @@ void setup()
   connectMQTT();
 }
 
-void loop()
-{
+//en el bucle comprobamos si tenemos conexion a mqtt y ejecuta el bucle d mqtt
+void loop() {
+  //si el mqttClient no esta conectado
   if(!mqttClient.connected()) {
-    connectMQTT();
+    connectMQTT(); //trata d establecer conexion con el metodo q hemos declarado
   }
 
+  //si hay conexion ejecuta el bucle d mqtt
   mqttClient.loop();
 }
